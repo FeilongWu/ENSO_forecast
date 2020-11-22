@@ -9,3 +9,4 @@ python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" -
 python reforecast.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name test_cnn.pt  --startdate '2015-01-01' --enddate '2018-12-31'  --dataset observations  --leadtime 2 --reforecast_data reforecast.txt
 
 python reforecast.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name LR  --test_start 2015-01-01 --test_end 2018-12-31  --dataset observations  --leadtime 2 --reforecast_data reforecast.txt --model linear_regression --startdate 1980-01-01 --enddate 2000-12-31
+
