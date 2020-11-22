@@ -1,0 +1,2 @@
+./datasets/sst_1994_1996_forcast2018_12month_6leadmonths_cube0.nc,2018
+./datasets/sst_1993_2016_forcast2019_12month_6leadmonth_cube0.nc,2019
