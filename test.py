@@ -19,11 +19,16 @@ import numpy as np
 
 
 if __name__=='__main__':
+    
     opt=Test_options().parse()
     opt.startdate = strTodate(opt.startdate)
     opt.enddate = strTodate(opt.enddate)
     opt.test_start = strTodate(opt.test_start)
     opt.test_end = strTodate(opt.test_end)
+    if '.' in opt.name:
+        fname = opt.name[:opt.name.index('.')]
+    else:
+        fname = opt.name
     if opt.model=='cnn':
         test_predictors, test_predictands = assemble_predictors_predictands(opt)
         test_dataset = ENSODataset(test_predictors, test_predictands)
@@ -38,16 +43,15 @@ if __name__=='__main__':
         corr, _ = pearsonr(test_predictands, pred_CNN)
         rmse = mean_squared_error(test_predictands, pred_CNN) ** 0.5
         
-        if '.' in opt.name:
-            fname = opt.name[:opt.name.index('.')]
-        else:
-            fname = opt.name
+        
         plot_nino_time_series(test_predictands, pred_CNN, '{} Predictions. Corr: {:3f}. RMSE: {:3f}.'.format(experiment_name,
                                                                       corr, rmse),'./results/'+fname)
     elif opt.model == 'linear_regression':
-        x_train,y_train=assemble_basic_predictors_predictands(opt)
+        x_train,y_train=assemble_basic_predictors_predictands(opt,train=True)
         opt.startdate=opt.test_start
         opt.enddate=opt.test_end
+        opt.variable_name = opt.variable_name_ref
+        opt.dataroot = opt.dataroot1
         x_test,y_test=assemble_basic_predictors_predictands(opt)
         pred_reg=lin_reg(x_train, y_train,x_test)
         if opt.classification:

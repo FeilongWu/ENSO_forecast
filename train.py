@@ -25,7 +25,7 @@ if __name__=='__main__':
     if opt.model=='cnn':
         from models import CNN
         net=CNN(opt)
-        train_predictors,train_predictands=assemble_predictors_predictands(opt)
+        train_predictors,train_predictands=assemble_predictors_predictands(opt,train=True)
         train_dataset = ENSODataset(train_predictors, train_predictands)
         trainloader = DataLoader(train_dataset, batch_size=opt.batch_size)
         optimizer = optim.Adam(net.parameters(), lr=opt.lr)

@@ -22,6 +22,7 @@ class Training_options():
         parser.add_argument('--lon_slice',default=None, help='the slice of longitudes to use')
         parser.add_argument('--batch_size',type=int, default=10, help='training batch size')
         parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
+        parser.add_argument('--variable_name', default='', help='the name of variable in the .nc data file.')
 
         self.parser=parser
     def parse(self):

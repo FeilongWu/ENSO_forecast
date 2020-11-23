@@ -6,6 +6,7 @@ class Reforecast_options():
         self.initialize(parser)
     def initialize(self,parser):
         parser.add_argument('--dataroot', required=True,help='path to test data')
+        parser.add_argument('--dataroot1',help='path to test data for linear regression.')
         parser.add_argument('--instrument_data', default='', help='path to test dataset only for linear regression')
         parser.add_argument('--name',required=True,help='name of the model saved in ./checkpoints/ if use cnn. experiment name if use linear regression')
         parser.add_argument('--model',default='cnn',help='name of model to use. cnn | linear_regression')
@@ -26,7 +27,8 @@ class Reforecast_options():
         parser.add_argument('--lon_slice',default=None, help='the slice of longitudes to use')
         parser.add_argument('--reforecast_data', required=True,help='path to reforecast data text file')
         parser.add_argument('--ref', type=float, default = 299.0487,help='reference global sst in K')
-        parser.add_argument('--variable_name', default='unknown_local_param_34_128', help='variable name of reforecast data')
+        parser.add_argument('--variable_name', default='', help='variable name of model data')
+        parser.add_argument('--variable_name_ref', default='unknown_local_param_34_128', help='variable name of reforecast data')
         
         
         

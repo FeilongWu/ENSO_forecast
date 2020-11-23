@@ -57,9 +57,11 @@ if __name__ == '__main__':
         pred_dict ={}
         merge_date_nino(pred_dict,idx,pred_CNN)
     elif opt.model == 'linear_regression':
-        x_train,y_train=assemble_basic_predictors_predictands(opt)
+        x_train,y_train=assemble_basic_predictors_predictands(opt,train=True)
         opt.startdate=opt.test_start
         opt.enddate=opt.test_end
+        opt.dataroot = opt.dataroot1
+        opt.dataset = 'observations'
         x_test,y_test=assemble_basic_predictors_predictands(opt)
         idx = get_date_idx(y_test.index.values.tolist())
         pred_reg=lin_reg(x_train, y_train,x_test)
@@ -81,6 +83,7 @@ if __name__ == '__main__':
         fname = opt.name
 
     ## get reforecast
+    opt.variable_name = opt.variable_name_ref
     refore_data = read_reforecast(opt)
     reforecast = []
     model_pred = []

@@ -40,7 +40,7 @@ def load_enso_indices(instrument_data):
   enso_vals.index = pd.to_datetime(enso_vals.index)
   return enso_vals
 
-def assemble_basic_predictors_predictands(opt):
+def assemble_basic_predictors_predictands(opt, train=False):
   """
   inputs
   ------
@@ -63,41 +63,117 @@ def assemble_basic_predictors_predictands(opt):
   end_date = opt.enddate
   lead_time=opt.leadtime
   use_pca = opt.pca
+  num_input_time_steps = opt.num_input_time_steps
+  lat_slice=opt.lat_slice
+  lon_slice=opt.lon_slice
   n_components = opt.n_components
-  
-  ds = xr.open_dataset(opt.dataroot)
-  sst = ds['sst'].sel(time=slice(start_date, end_date))
+  fname = opt.dataroot
+  variable_name = opt.variable_name
+  data_format = opt.data_format
+  dataset = opt.dataset
+  if opt.variable_name:
+    variable_name  = opt.variable_name
+  else:
+    variable_name = {'observations' : 'sst',
+                   'observations2': 't2m',
+                   'CNRM'         : 'tas',
+                   'MPI'          : 'tas'}[dataset]
+
+  ds = xr.open_dataset(fname)
+  sst = ds[variable_name].sel(time=slice(start_date, end_date))
   num_time_steps = sst.shape[0]
-  
-  #sst is a 3D array: (time_steps, lat, lon)
-  #in this tutorial, we will not be using ML models that take
-  #advantage of the spatial nature of global temperature
-  #therefore, we reshape sst into a 2D array: (time_steps, lat*lon)
-  #(At each time step, there are lat*lon predictors)
   sst = sst.values.reshape(num_time_steps, -1)
   sst[np.isnan(sst)] = 0
-
-  #Use Principal Components Analysis, also called
-  #Empirical Orthogonal Functions, to reduce the
-  #dimensionality of the array
   if use_pca:
     pca = sklearn.decomposition.PCA(n_components=n_components)
     pca.fit(sst)
     X = pca.transform(sst)
   else:
     X = sst
+  if train:
+    sst1 = ds[variable_name].sel(time=slice(start_date, end_date))
+    if lat_slice is not None:
+      try:
+          sst1=sst1.sel(lat=lat_slice)
+      except:
+          raise NotImplementedError("Implement slicing!")
+    if lon_slice is not None:
+      try:
+          sst1=sst1.sel(lon=lon_slice)
+      except:
+          raise NotImplementedError("Implement slicing!")
+    num_samples = sst1.shape[0]
+    sst1 = np.stack([sst1.values[n-num_input_time_steps:n] for n in range(num_input_time_steps,
+                                                              num_samples+1)])
+    sst1[np.isnan(sst1)] = 0
+    if data_format=='flatten':
 
-  start_date_plus_lead = pd.to_datetime(start_date) + \
-                        pd.DateOffset(months=lead_time)
-  end_date_plus_lead = pd.to_datetime(end_date) + \
+      sst1 = sst1.reshape(num_samples, -1)
+
+      if use_pca:
+        pca = sklearn.decomposition.PCA(n_components=n_components)
+        pca.fit(sst1)
+        X1 = pca.transform(sst1)
+      else:
+        X1 = sst1
+    else: # data_format=='spatial'
+      X1 = sst1
+    start_date_plus_lead1 = pd.to_datetime(start_date) + \
+                        pd.DateOffset(months=lead_time+num_input_time_steps-1)
+    end_date_plus_lead1 = pd.to_datetime(end_date) + \
                       pd.DateOffset(months=lead_time)
-  y = load_enso_indices(opt.instrument_data)[slice(start_date_plus_lead, 
+  
+    X1 = X1.astype(np.float32)
+    target_start_date_with_2_month1 = start_date_plus_lead1 - pd.DateOffset(months=2)
+    subsetted_ds = ds[variable_name].sel(time=slice(target_start_date_with_2_month1,
+                                                   end_date_plus_lead1))
+    #Calculate the Nino3.4 index
+    y = subsetted_ds.sel(lat=slice(5,-5), lon=slice(360-170,360-120)).mean(dim=('lat','lon'))
+
+    y = pd.Series(y.values).rolling(window=3).mean()[2:].values
+    y = y.astype(np.float32)
+    #X = X[1:]
+  else:
+    start_date_plus_lead = pd.to_datetime(start_date) + \
+                        pd.DateOffset(months=lead_time)
+    end_date_plus_lead = pd.to_datetime(end_date) + \
+                      pd.DateOffset(months=lead_time)
+    y = load_enso_indices(opt.instrument_data)[slice(start_date_plus_lead, 
                                 end_date_plus_lead)]
-  #print(type(X))
-  #print(type(y))
-
-
-  ds.close()
+  
+##  ds = xr.open_dataset(opt.dataroot)
+##  sst = ds['sst'].sel(time=slice(start_date, end_date))
+##  num_time_steps = sst.shape[0]
+##  
+##  #sst is a 3D array: (time_steps, lat, lon)
+##  #in this tutorial, we will not be using ML models that take
+##  #advantage of the spatial nature of global temperature
+##  #therefore, we reshape sst into a 2D array: (time_steps, lat*lon)
+##  #(At each time step, there are lat*lon predictors)
+##  sst = sst.values.reshape(num_time_steps, -1)
+##  sst[np.isnan(sst)] = 0
+##
+##  #Use Principal Components Analysis, also called
+##  #Empirical Orthogonal Functions, to reduce the
+##  #dimensionality of the array
+##  if use_pca:
+##    pca = sklearn.decomposition.PCA(n_components=n_components)
+##    pca.fit(sst)
+##    X = pca.transform(sst)
+##  else:
+##    X = sst
+##
+##  start_date_plus_lead = pd.to_datetime(start_date) + \
+##                        pd.DateOffset(months=lead_time)
+##  end_date_plus_lead = pd.to_datetime(end_date) + \
+##                      pd.DateOffset(months=lead_time)
+##  y = load_enso_indices(opt.instrument_data)[slice(start_date_plus_lead, 
+##                                end_date_plus_lead)]
+##  #print(type(X))
+##  #print(type(y))
+##
+##
+##  ds.close()
   return X, y
 
 
@@ -147,13 +223,15 @@ def assemble_predictors_predictands(opt,train=False):
 
   
   file_name = opt.dataroot
-  variable_name = {'observations' : 'sst',
+  if opt.variable_name:
+    variable_name  = opt.variable_name
+  else:
+    variable_name = {'observations' : 'sst',
                    'observations2': 't2m',
                    'CNRM'         : 'tas',
                    'MPI'          : 'tas'}[dataset]
 
   ds = xr.open_dataset(file_name)
-  
   sst = ds[variable_name].sel(time=slice(start_date, end_date))
   if lat_slice is not None:
     try:
