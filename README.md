@@ -1,14 +1,19 @@
 python train.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --name test_cnn --epoch 2 --startdate 1980-01-01 --enddate 2101-12-31   --dataset CNRM
 
-python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name test_cnn.pt  --startdate 2000-01-01 --enddate 2005-12-31  --dataset observations
+python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name test_cnn.pt  --startdate "" --enddate ""  --test_start 2002-01-01 --test_end 2015-12-31 --dataset observations --compare_ground_truth
 
-python test.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --dataroot1  "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --dataset CNRM --name linear_classification --startdate 1950-01-01 --enddate 2050-12-31 --instrument_data "./datasets/nino34.long.anom.data.txt" --test_start 2002-01-01 --test_end 2015-12-31  --model linear_regression --classification True
+python test.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --dataroot1  "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --dataset CNRM --name linear_classification --startdate 1950-01-01 --enddate 2050-12-31 --instrument_data "./datasets/nino34.long.anom.data.txt" --test_start 2002-01-01 --test_end 2015-12-31  --model linear_regression --classification True --compare_ground_truth
 
-python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name NinoPrediction_leadtime2_timespan1850-01-01-2299-01-01.pt  --startdate "" --enddate ""  --test_start 2000-01-01 --test_end 2010-12-31 --dataset observations --classification True --leadtime 2 --num_input_time_steps 2
+python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name NinoPrediction_leadtime2_timespan1850-01-01-2299-01-01.pt  --startdate "" --enddate ""  --test_start 2000-01-01 --test_end 2010-12-31 --dataset observations --classification True --leadtime 2 --num_input_time_steps 2 --compare_ground_truth
 
-python reforecast.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name test_cnn.pt  --startdate "" --enddate "" --test_start 2015-01-01 --test_end 2018-12-31   --dataset observations  --leadtime 2 --reforecast_data reforecast.txt
+python reforecast.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name test_cnn.pt  --startdate "" --enddate "" --test_start 2015-01-01 --test_end 2018-12-31   --dataset observations  --leadtime 2 --reforecast_data reforecast.txt 
 
 python reforecast.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --dataroot1  "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --dataset CNRM --name LR   --startdate 1980-01-01 --enddate 2030-12-31 --test_start 2015-01-01 --test_end 2018-12-31  --leadtime 2 --reforecast_data reforecast.txt --model linear_regression 
+
+python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "" --name NinoPrediction_leadtime2_timespan1850-01-01-2299-01-01.pt  --startdate "" --enddate ""  --test_start 2000-01-01 --test_end 2010-12-31 --dataset observations  --leadtime 2 --num_input_time_steps 2 
+
+python test.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --dataroot1  "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --dataset CNRM --name linear_classification --startdate 1950-01-01 --enddate 2050-12-31 --instrument_data "./datasets/nino34.long.anom.data.txt" --test_start 2002-01-01 --test_end 2015-12-31  --model linear_regression --classification True --compare_ground_truth
+
 
 # ENSO_forecast
 

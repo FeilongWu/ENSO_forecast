@@ -14,7 +14,7 @@ class Test_options():
         parser.add_argument('--num_input_time_steps', type=int, default=1, help='the number of input time steps in the predictor')
         parser.add_argument('--startdate',required=True,help='start date of data as yyyy-mm-dd')
         parser.add_argument('--enddate',required=True,help='end date of data as yyyy-mm-dd')
-        parser.add_argument('--pca',type=bool,default=False,help='use pca')
+        parser.add_argument('--pca',action='store_true',help='use pca')
         parser.add_argument('--n_components',type=int, default=32, help='the number of components to use for PCA')
         parser.add_argument('--dataset', default='observations', help="observations | CNRM | MPI. Training dataset for linear regression.")
         parser.add_argument('--data_format',default='spatial', help = "'spatial' or 'flatten'. 'spatial' preserves the lat/lon dimensions and returns an array of shape (num_samples, num_input_time_steps, lat, lon).  'flatten' returns an array of shape (num_samples, num_input_time_steps*lat*lon)") 
@@ -27,6 +27,7 @@ class Test_options():
         parser.add_argument('--lon_slice',default=None, help='the slice of longitudes to use')
         parser.add_argument('--variable_name', default='', help='variable name of test data. For linear regression, it is the training data.')
         parser.add_argument('--variable_name_ref', default='sst', help='variable name of test data for linear regression.')
+        parser.add_argument('--compare_ground_truth', action='store_true', help='whether compare the prediction with ground truth.')
         
         
         self.parser=parser

@@ -138,8 +138,11 @@ def assemble_basic_predictors_predictands(opt, train=False):
                         pd.DateOffset(months=lead_time)
     end_date_plus_lead = pd.to_datetime(end_date) + \
                       pd.DateOffset(months=lead_time)
-    y = load_enso_indices(opt.instrument_data)[slice(start_date_plus_lead, 
+    if opt.compare_ground_truth:
+      y = load_enso_indices(opt.instrument_data)[slice(start_date_plus_lead, 
                                 end_date_plus_lead)]
+    else:
+      y = np.array([0]*X.shape[0])
   
 ##  ds = xr.open_dataset(opt.dataroot)
 ##  sst = ds['sst'].sel(time=slice(start_date, end_date))
@@ -279,9 +282,11 @@ def assemble_predictors_predictands(opt,train=False):
                         pd.DateOffset(months=lead_time+num_input_time_steps-1)
   end_date_plus_lead = pd.to_datetime(end_date) + \
                       pd.DateOffset(months=lead_time)
-  if dataset == 'observations':
+  if dataset == 'observations' and opt.compare_ground_truth == True:
     y = load_enso_indices(opt.instrument_data)[slice(start_date_plus_lead, 
                                   end_date_plus_lead)]
+  elif not opt.compare_ground_truth:
+    y=np.array([0]*X.shape[0])
   else: #the data is from a GCM
     X = X.astype(np.float32)
     #The Nino3.4 Index is composed of three month rolling values
