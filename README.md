@@ -50,8 +50,13 @@ pip freeze > requirements.txt
 ```
 
 ### Training
-You must specify "dataroot", "name", "startdate", and "enddate", which refer to the path to the training dataset, the name of your CNN model, the training starting date, and the training end date, respectively. An example command to train a CNN model with CNRM dataset is given below.
+- You must specify "dataroot", "name", "startdate", and "enddate", which refer to the path to the training dataset, the name of your CNN model, the training starting date, and the training end date, respectively. An example command to train a CNN model with CNRM dataset is given below. The linear regression model will be trained in runtime when trying to do predictions.
  ```bash
 python train.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --name test_cnn --epoch 2 --startdate '1980-01-01' --enddate '2101-12-31'   --dataset CNRM
 ```
 
+### Testing
+- Specify the four required parameters "dataroot" and "name" for training. At this time, the "name" parameter refers to the path to a CNN model by which you want to preduce predictions. It is the name of the experiment for using linear regression. The "test_start " and "test_end " are the start and end dates for prediction. Specify "startdate" and "enddate" as empty string for using CNN, but they should be the start and end training dates for using linear regression. The "dataroot" refers to the file of predictors for CNN and is the training file for linear regression. The "dataroot1" is the path to the file of predictors for linear regression and "instrument_data " is the path to the ground truth Nino3.4 index as a text file for using all models.
+ ```bash
+python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name test_cnn.pt  --startdate "" --enddate ""  --test_start 2002-01-01 --test_end 2015-12-31 --dataset observations --compare_ground_truth
+```
