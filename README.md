@@ -68,7 +68,7 @@ python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" -
 python test.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --dataroot1  "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --dataset CNRM --name linear_classification --startdate 1950-01-01 --enddate 2050-12-31 --instrument_data "./datasets/nino34.long.anom.data.txt" --test_start 2002-01-01 --test_end 2015-12-31  --model linear_regression --classification 
 ```
 ### Reforecast
-- Model predictions can be compared with theory-based model predictions if reforecast data is available. The following command is to use predictions from a CNN pretrained model against reforecast data.
+- Model predictions can be compared with theory-based model predictions if reforecast data is available. The following command is to use predictions from a CNN pretrained model against reforecast data. Specify your reforecast data path and the year to which you want to extract in the "reforecast.txt" separated by a comma.
 ```bash
 python reforecast.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name NinoPrediction_leadtime2_timespan1850-01-01-2299-01-01.pt  --startdate "" --enddate "" --test_start 1992-01-01 --test_end 2015-12-31   --dataset observations  --leadtime 2 --reforecast_data reforecast.txt --compare_ground_truth --num_input_time_steps 2
 ```
