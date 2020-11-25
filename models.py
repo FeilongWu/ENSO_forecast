@@ -56,6 +56,9 @@ class Print(nn.Module):
         print(x.size())
         return x
 
+def select_time(xr):
+    return str(xr.time.values.flatten())[2:12]
+
 def classify_pd(x,threshold=1.5):
     # x: pd.Series
     index = x.index
@@ -128,21 +131,41 @@ def parse_file(url):
         years.append(i[1].strip())
     return files,years
 
-def get_dates(xr,year):
+##def get_dates(xr,year,leadtime, period):
+##    # xr: xarray object
+##    year=str(year)
+##    dates=[]
+##    temp=''
+##    for i in range(len(xr)):
+##        time = str(xr[i].time.values.flatten())[2:12]
+##        if time[:4]==year:
+##            if temp!='' and temp>time:
+##                break
+##            dates.append(time)
+##            temp=time
+##        else:
+##            break
+##    return dates
+
+def get_dates(xr,year,leadtime, period):
     # xr: xarray object
+    cover =  leadtime * period # number of slices covered
     year=str(year)
-    dates=[]
     temp=''
+    idx = -1
     for i in range(len(xr)):
-        time = str(xr[i].time.values.flatten())[2:12]
-        if time[:4]==year:
-            if temp!='' and temp>time:
-                break
-            dates.append(time)
-            temp=time
-        else:
+        idx += 1
+        time = select_time(xr[i])
+        time1 = select_time(xr[i+1])
+        if time[:4]==year and time==time1:
             break
-    return dates
+    for i in range(idx+1, len(xr)):
+        t1 = select_time(xr[i-1])
+        t2 = select_time(xr[i])
+        t3 = select_time(xr[i+1])
+        if t1!=t2 and t2!=t3:
+            break
+    return [i,i+cover-1]
 
 def merge_date_nino(dict_, dates,nino):
     
@@ -151,32 +174,65 @@ def merge_date_nino(dict_, dates,nino):
     
         
 
+##def read_reforecast(opt):
+##
+##  fname = opt.reforecast_data
+##  num_input_time_steps = opt.num_input_time_steps
+##  ref = opt.ref
+##  variable_name = opt.variable_name
+##  file_leadtime = opt.file_leadtime
+##  period = opt.period
+##  
+##  files,years=parse_file(fname)
+##  dates,nino34=[],[]
+##  dict_ = {}
+##  for i,j in zip(files,years):
+##    ds = xr.open_dataset(i)
+##    date_ = get_dates(ds[variable_name],j)
+##    start_date=0
+##    end_date=len(date_)
+##    subsetted_ds = ds[variable_name].sel(dim0=slice(start_date,
+##                                                   end_date))-ref # convert to anomaly
+##    num_samples = subsetted_ds.shape[0]
+##    #subsetted_ds = np.stack([subsetted_ds.values[n-num_input_time_steps:n] for n in range(num_input_time_steps,
+##    #                                                          num_samples+1)])
+##    #subsetted_ds[subsetted_ds>1000] = float('NaN')
+##    #Calculate the Nino3.4 index
+##    y = subsetted_ds.sel(latitude=slice(5,-5), longitude=slice(360-170,360-120)).mean(dim=('latitude','longitude'))
+##    
+##    y = pd.Series(y.values).rolling(window=3).mean()[2:].values
+##    y = y.astype(np.float32)
+##    merge_date_nino(dict_,date_,y)
+##    ds.close()
+##  return  dict_
+
+
 def read_reforecast(opt):
 
   fname = opt.reforecast_data
   num_input_time_steps = opt.num_input_time_steps
   ref = opt.ref
   variable_name = opt.variable_name
+  file_leadtime = opt.file_leadtime
+  period = opt.period
+  lead_time = opt.leadtime
   
   files,years=parse_file(fname)
   dates,nino34=[],[]
   dict_ = {}
   for i,j in zip(files,years):
+    y = []
+    date_ = []
     ds = xr.open_dataset(i)
-    date_ = get_dates(ds[variable_name],j)
-    start_date=0
-    end_date=len(date_)
-    subsetted_ds = ds[variable_name].sel(dim0=slice(start_date,
-                                                   end_date))-ref # convert to anomaly
-    num_samples = subsetted_ds.shape[0]
-    #subsetted_ds = np.stack([subsetted_ds.values[n-num_input_time_steps:n] for n in range(num_input_time_steps,
-    #                                                          num_samples+1)])
-    #subsetted_ds[subsetted_ds>1000] = float('NaN')
-    #Calculate the Nino3.4 index
-    y = subsetted_ds.sel(latitude=slice(5,-5), longitude=slice(360-170,360-120)).mean(dim=('latitude','longitude'))
-    
-    y = pd.Series(y.values).rolling(window=3).mean()[2:].values
+    start_date,end_date = get_dates(ds[variable_name],j,file_leadtime,period)
+    index = lead_time - 1 + start_date
+    for k in range(period):
+      temp = ds[variable_name][index]
+      date_.append(select_time(temp))
+      y.append(temp.sel(latitude=slice(5,-5), longitude=slice(360-170,360-120)).mean(dim=('latitude','longitude')).values.flatten()[0]-ref)
+      index += file_leadtime
+    y = pd.Series(y).rolling(window=3).mean()[2:].values
     y = y.astype(np.float32)
-    merge_date_nino(dict_,date_,y)
+    merge_date_nino(dict_,date_[:-2],y)
     ds.close()
   return  dict_

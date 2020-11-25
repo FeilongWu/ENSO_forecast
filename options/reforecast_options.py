@@ -26,10 +26,12 @@ class Reforecast_options():
         parser.add_argument('--lat_slice',default=None, help='the slice of latitudes to use')
         parser.add_argument('--lon_slice',default=None, help='the slice of longitudes to use')
         parser.add_argument('--reforecast_data', required=True,help='path to reforecast data text file')
-        parser.add_argument('--ref', type=float, default = 299.0487,help='reference global sst in K')
+        parser.add_argument('--ref', type=float, default = 299.8487,help='reference global sst in K')
         parser.add_argument('--variable_name', default='', help='variable name of model data')
         parser.add_argument('--variable_name_ref', default='unknown_local_param_34_128', help='variable name of reforecast data')
         parser.add_argument('--compare_ground_truth', action='store_true', help='whether compare the prediction with ground truth.')
+        parser.add_argument('--file_leadtime', default=6,type=int, help='the lead time of the reforecast file.')
+        parser.add_argument('--period', default=8,type=int, help='the number of months per year in a given lead time the reforecast covers.')
         
         
         self.parser=parser

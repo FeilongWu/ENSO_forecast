@@ -96,6 +96,8 @@ if __name__ == '__main__':
             model_pred.append(mod)
         except:
             continue
+    if opt.classification:
+        reforecast = classify(reforecast,threshold= opt.threshold)
     reforecast = pd.Series(reforecast, index=pd.to_datetime(time_series))
     corr, _ = pearsonr(model_pred, reforecast)
     rmse = mean_squared_error(model_pred, reforecast) ** 0.5
