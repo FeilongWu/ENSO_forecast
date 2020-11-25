@@ -63,9 +63,9 @@ python train.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --name t
  ```bash
 python test.py --dataroot "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --instrument_data "./datasets/nino34.long.anom.data.txt" --name test_cnn.pt  --startdate "" --enddate ""  --test_start 2002-01-01 --test_end 2015-12-31 --dataset observations --compare_ground_truth
 ```
-- By default, the testing would not produce a result in comparison with grounth. If "--compare_ground_truth" is not used, the resulting plot will only contains the model predictions and there is no need to specify ground truth Nino3.4 index as in "instrument_data ". The following code produces predictions using linear classification.
+- By default, the testing would not produce a result in comparison with ground truth. If "--compare_ground_truth" is not used, the resulting plot will only contains the model predictions and there is no need to specify ground truth Nino3.4 index as in "instrument_data ". The following code produces predictions using linear classification.
 ```bash
-python test.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --dataroot1  "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --dataset CNRM --name linear_classification --startdate 1950-01-01 --enddate 2050-12-31 --instrument_data "./datasets/nino34.long.anom.data.txt" --test_start 2002-01-01 --test_end 2015-12-31  --model linear_regression --classification 
+python test.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --dataroot1  "./datasets/sst.mon.mean.trefadj.anom.1880to2018.nc" --dataset CNRM --name linear_classification --startdate 1950-01-01 --enddate 2050-12-31 --instrument_data "" --test_start 2002-01-01 --test_end 2015-12-31  --model linear_regression --classification 
 ```
 ### Reforecast
 - Model predictions can be compared with theory-based model predictions if reforecast data is available. The following command is to use predictions from a CNN pretrained model against reforecast data. Specify your reforecast data path and the year to which you want to extract in the "reforecast.txt" separated by a comma.

@@ -84,7 +84,8 @@ if __name__=='__main__':
         
         if opt.classification:
             pred_CNN = classify(pred_CNN,threshold= opt.threshold)
-            test_predictands=classify_pd(test_predictands,threshold= opt.threshold)
+            if opt.compare_ground_truth:
+                test_predictands=classify_pd(test_predictands,threshold= opt.threshold)
             experiment_name = 'CNN Classification'
         else:
             experiment_name = 'CNN Regression'
@@ -105,7 +106,8 @@ if __name__=='__main__':
         pred_reg=lin_reg(x_train, y_train,x_test)
         if opt.classification:
             pred_reg = classify(pred_reg,threshold= opt.threshold)
-            y_test = classify_pd(y_test,threshold= opt.threshold)
+            if opt.compare_ground_truth:
+                y_test = classify_pd(y_test,threshold= opt.threshold)
             experiment_name = 'Linear Classification'
         else:
             experiment_name = 'Linear Regression'

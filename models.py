@@ -115,7 +115,7 @@ def plot_nino_time_series(y, predictions, title,fname, label='Ground Truth'):
     plt.plot(predictions, '--', label='ML Predictions')
     plt.legend(loc='best')
     plt.title(title)
-    plt.ylabel('Nino3.4 Index')
+    plt.ylabel('Nino3.4 Index/ONI')
     plt.xlabel('Date')
     if not os.path.isdir("./results/"):
         os.mkdir('./results')
