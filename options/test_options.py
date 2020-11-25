@@ -19,7 +19,7 @@ class Test_options():
         parser.add_argument('--dataset', default='observations', help="observations | CNRM | MPI. Training dataset for linear regression.")
         parser.add_argument('--data_format',default='spatial', help = "'spatial' or 'flatten'. 'spatial' preserves the lat/lon dimensions and returns an array of shape (num_samples, num_input_time_steps, lat, lon).  'flatten' returns an array of shape (num_samples, num_input_time_steps*lat*lon)") 
         parser.add_argument('--batch_size',type=int, default=10, help='training batch size')
-        parser.add_argument('--classification', type=bool, default=False, help='use classification')
+        parser.add_argument('--classification', action='store_true', help='use classification')
         parser.add_argument('--threshold', type=float, default=1.5, help='threshold of Nino 3.4 index as El Nino')
         parser.add_argument('--test_start',default='',help='test start date only for linear regression')
         parser.add_argument('--test_end',default='',help='test end date only for linear regression')
