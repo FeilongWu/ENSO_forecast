@@ -75,7 +75,8 @@ docker run -p 8888:8888 -it enso:1.0
 ```
 - When prompted to use the links, you can copy and paste one of the links into your browswer. Usually, the last link works. The links are randomly generated. Below is an example prompt that you will see after executing the command to serve the image. The example prompt contains three links.
 <img src='docker_link.PNG' width=1000>
-- Click on "ENSO_forecast.ipynb" to access to the notebook where you can use the training/testing/reforecast commands above.
+
+- When you open the link in a new tab, click on "ENSO_forecast.ipynb" to access to the notebook where you can use the training/testing/reforecast commands above.
 
 ## Jupyter Notebook
 - A Jupyter notebook named "ENSO_forecast.ipynb" is provided in this repository. Make sure you have installed [Jupyter Notebook](https://jupyter.org/index.html). If you have cloned this repository and followed the instructions above to set up your models (if any) and datasets, you can open your Command Prompt. In Command Prompt, go to the repository you just cloned. An example command is as below.
