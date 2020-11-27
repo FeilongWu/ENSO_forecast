@@ -14,7 +14,7 @@ If you have pretrained models and datasets, put them under directores "/checkpoi
 cd "C://Users//your//name//ENSO_forecast"
 ```
 
-- If you have <strong>venv</strong> installed, please skip. Use the following command to install  <strong>venv</strong>. This requires Python3.8:
+- If you have <strong>venv</strong> installed, please skip. Use the following command to install  <strong>venv</strong>. This requires Python3.8 or above. Other visions may work, but we do not guarantee.
 ```bash
 pip install --user virtualenv
 ```
