@@ -74,7 +74,7 @@ docker build --tag enso:1.0 .
 docker run -p 8888:8888 -it enso:1.0
 ```
 - When prompted to use the links, you can copy and paste one of the links into your browswer. Usually, the last link works. The links are randomly generated. Below is an example prompt that you will see after executing the command to serve the image. The example prompt contains three links.
-<img src='docker_link.PNG' width=500>
+<img src='docker_link.PNG' width=1000>
 - Click on "ENSO_forecast.ipynb" to access to the notebook where you can use the training/testing/reforecast commands above.
 
 ## Jupyter Notebook
