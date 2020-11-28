@@ -8,7 +8,7 @@ git clone https://github.com/FeilongWu/ENSO_forecast.git
 ```
 
 If you have pretrained models and datasets, put them under directores "/checkpoints/" and "/datasets/", respectively. All the output CNN models will be saved under "/checkpoints/" and output results will be saved under "/results/".
-### All the commands below are executed using Command Prompt unless specified otherwise.
+### All the commands below are executed using [Anaconda Prompt](https://www.anaconda.com/) unless specified otherwise.
 - Set the repository you just cloned as your working directory. The path to the directory may vary for different users. An example command is shown below:
 ```bash
 cd "C://Users//your//name//ENSO_forecast"
@@ -23,8 +23,9 @@ pip install --user virtualenv
 python -m venv ENSO
 .\ENSO\Scripts\activate
 ```
-- Install dependency(ies) for the environment.:
+- Install Pytorch and other dependencies for the environment.
 ```bash
+conda install pytorch torchvision -c pytorch
 pip install -r requirements.txt
 ```
 - You can extract a dependency list:
@@ -61,7 +62,7 @@ python reforecast.py --dataroot "./datasets/CNRM_tas_anomalies_regridded.nc" --d
 ```
 
 ## Docker
-- We provide a dockerfile by which you can build your container. Refer to the instructions above to clone this repository and set up your datasets and models (if any). Please make sure you have installed [Docker Desktop](https://www.docker.com/products/docker-desktop) in your computer. Also, make sure that your docker daemon is running. In Command Prompt, go to the repository you just cloned. An example command is as below.
+- We provide a dockerfile by which you can build your container. Refer to the instructions above to clone this repository and set up your datasets and models (if any). Please make sure you have installed [Docker Desktop](https://www.docker.com/products/docker-desktop) in your computer. Also, make sure that your docker daemon is running. In Anaconda Prompt, go to the repository you just cloned. An example command is as below.
  ```bash
 cd "C://Users//your//name//ENSO_forecast"
 ```
@@ -79,11 +80,11 @@ docker run -p 8888:8888 -it enso:1.0
 - When you open the link in a new tab, click on "ENSO_forecast.ipynb" to access to the notebook where you can use the training/testing/reforecast commands above.
 
 ## Jupyter Notebook
-- A Jupyter notebook named "ENSO_forecast.ipynb" is provided in this repository. Make sure you have installed [Jupyter Notebook](https://jupyter.org/index.html). If you have cloned this repository and followed the instructions above to set up your models (if any) and datasets, you can open your Command Prompt. In Command Prompt, go to the repository you just cloned. An example command is as below.
+- A Jupyter notebook named "ENSO_forecast.ipynb" is provided in this repository. Make sure you have installed [Jupyter Notebook](https://jupyter.org/index.html). If you have cloned this repository and followed the instructions above to set up your models (if any) and datasets, you can open your Anaconda Prompt. In Anaconda Prompt, go to the repository you just cloned. An example command is as below.
  ```bash
 cd "C://Users//your//name//ENSO_forecast"
 ```
-- Type the following command in your Command Prompt to launch Jupyter.
+- Type the following command in your Anaconda Prompt to launch Jupyter.
  ```bash
 jupyter notebook
 ```
