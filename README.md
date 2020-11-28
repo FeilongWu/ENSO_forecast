@@ -23,9 +23,9 @@ pip install --user virtualenv
 python -m venv ENSO
 .\ENSO\Scripts\activate
 ```
-- Install Pytorch and other dependencies for the environment.
+- Install Pytorch and other dependencies for the environment. Use the command below if your device has a GPU and CUDA10.2. Refer to the [instructions](https://pytorch.org/get-started/locally/) if your device has different configurations.
 ```bash
-conda install pytorch torchvision -c pytorch
+pip install torch===1.7.0 torchvision===0.8.1 torchaudio===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
 pip install -r requirements.txt
 ```
 - You can extract a dependency list:
